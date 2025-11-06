@@ -1,5 +1,7 @@
 //abstract class representing a generic bank account
 
+import 'package:path/path.dart';
+
 abstract class BankAccount {
   //private fields
   int _accountNumber;
@@ -171,6 +173,39 @@ class Bank {
   }
 
   void generateReport(){
-    
+    print('\n=== Bank Accounts Reports===');
+    for (var acc in _accounts){
+      acc.displayInfo();
+    }
   }
+}
+
+//Main function for testing
+void main(){
+  Bank bank =Bank();
+
+  // create accounts
+  var savings = SavingsAccount((001), "Prashant", 2000);
+  var checking = CheckingAccount(1002, "Sushim", 500);
+  var premium = PremiumAccount(10002, "Nishan", 50000);
+
+  //Add to bank
+  bank.createAccount(savings);
+  bank.createAccount(checking);
+  bank.createAccount(premium);
+
+  //perform operations
+  savings.withdraw(200);
+  checking.withdraw(500);
+  premium.withdraw(4000);
+
+  //transfer money
+  bank.transfer(001, 1002, 100);
+
+  //display reports
+  bank.generateReport();
+
+  //Interest Calculation
+  print('\nInterest for Prashant (Savings): \$${savings.calculateInterest().toStringAsFixed(2)}');
+  print('Interest for Nishan (premium): \$${premium.calculateInterest().toStringAsFixed(2)}');
 }
