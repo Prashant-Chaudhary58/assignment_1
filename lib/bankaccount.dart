@@ -57,132 +57,134 @@ class SavingsAccount extends BankAccount implements InterestBearing {
     if (amount > 0) {
       balance += amount;
       print('Deposited \$${amount.toStringAsFixed(2)} to Savings Account.');
-    }else{
-      print('Invalid deposit amount.')
+    } else {
+      print('Invalid deposit amount.');
     }
   }
 
   @override
   void withdraw(double amount) {
-    if (_withdrawCount>=3){
+    if (_withdrawCount >= 3) {
       print('Withdrawal limit reached for this month.');
       return;
     }
-    if (balance -amount<minBalance){
+    if (balance - amount < minBalance) {
       print('Cannot withdraw. Minimim balance requirement of \$500 not met');
-    }else{
-      balance -=amount;
+    } else {
+      balance -= amount;
       _withdrawCount++;
       print('Withdrew \$${amount.toStringAsFixed(2)} from Savings Account');
     }
   }
 }
 
-//Checking Account 
-class CheckingAccount extends BankAccount{
-  static const double overdraftFee =35.0;
+//Checking Account
+class CheckingAccount extends BankAccount {
+  static const double overdraftFee = 35.0;
 
   CheckingAccount(int accountNumber, String holderName, double balance)
-  :super (accountNumber, holderName, balance);
-  
+    : super(accountNumber, holderName, balance);
+
   @override
   void deposit(double amount) {
-    if (amount>0){
-      balance +=amount;
+    if (amount > 0) {
+      balance += amount;
       print('Deposited \$${amount.toStringAsFixed(2)} to Checking Account.');
-    }else{
+    } else {
       print('Invalid deposit amount');
     }
   }
-  
+
   @override
   void withdraw(double amount) {
-    balance -=amount;
-    if(balance<0){
-      balance-=overdraftFee;
+    balance -= amount;
+    if (balance < 0) {
+      balance -= overdraftFee;
       print('Account overdrawn. Overdraft fee of \$35 applied.');
-    }else{
+    } else {
       print('withdrew \$${amount.toStringAsFixed(2)} from checking account.');
     }
   }
 }
 
-//Premium Account 
-class PremiumAccount extends BankAccount implements InterestBearing{
-  static const double minBalance=10000.0;
-  static const double interestRate =0.05;
+//Premium Account
+class PremiumAccount extends BankAccount implements InterestBearing {
+  static const double minBalance = 10000.0;
+  static const double interestRate = 0.05;
 
   PremiumAccount(int accountNumber, String holderName, double balance)
-  :super (accountNumber, holderName, balance);
-  
+    : super(accountNumber, holderName, balance);
+
   @override
   double calculateInterest() {
-    return balance*interestRate;
+    return balance * interestRate;
   }
-  
+
   @override
   void deposit(double amount) {
-    if (amount>0){
-      balance+=amount;
+    if (amount > 0) {
+      balance += amount;
       print('Deposited \$${amount.toStringAsFixed(2)} to premium Account.');
-    }else {
+    } else {
       print('Invalid deposit amount.');
     }
   }
-  
+
   @override
   void withdraw(double amount) {
-    if(balance -amount<minBalance){
+    if (balance - amount < minBalance) {
       print('Cannot withdraw below the minimum balance of \$10,000');
-    }else{
-      balance-=amount;
+    } else {
+      balance -= amount;
       print('Withdrew \$${amount.toStringAsFixed(2)} from Premium Account.');
     }
   }
 }
 
-
-//Bank Class to manage multiple accounts 
+//Bank Class to manage multiple accounts
 class Bank {
-  List<BankAccount> _accounts =[];
+  List<BankAccount> _accounts = [];
 
-  void createAccount(BankAccount account){
+  void createAccount(BankAccount account) {
     _accounts.add(account);
     print('Account created for ${account.holderName}.');
   }
 
-  BankAccount? findAccount (int accountNumber){
-    for (var acc in _accounts){
-      if(acc.accountNumber == accountNumber) return acc;
+  BankAccount? findAccount(int accountNumber) {
+    for (var acc in _accounts) {
+      if (acc.accountNumber == accountNumber) return acc;
     }
     print('Account not found.');
     return null;
   }
 
-  void transfer (int fromAccNum, int toAccNum, double amount){
-    var fromAcc=findAccount(fromAccNum);
-    var toAcc=findAccount(toAccNum);
+  void transfer(int fromAccNum, int toAccNum, double amount) {
+    var fromAcc = findAccount(fromAccNum);
+    var toAcc = findAccount(toAccNum);
 
-    if(fromAcc !=null && toAcc != null){
+    if (fromAcc != null && toAcc != null) {
       fromAcc.withdraw(amount);
       toAcc.deposit(amount);
-      print('Transferred \$${amount.toStringAsFixed(2)} from''${fromAcc.holderName} to ${toAcc.holderName}');
-    }else{
+      print(
+        'Transferred \$${amount.toStringAsFixed(2)} from'
+        '${fromAcc.holderName} to ${toAcc.holderName}',
+      );
+    } else {
       print('Transfer failed. one or both accounts not found.');
     }
   }
 
-  void generateReport(){
+  void generateReport() {
     print('\n=== Bank Accounts Reports===');
-    for (var acc in _accounts){
+    for (var acc in _accounts) {
       acc.displayInfo();
     }
   }
 }
 
 //Main function for testing
-void main(){
-  Bank bank =Bank();
+void main() {
+  Bank bank = Bank();
 
   // create accounts
   var savings = SavingsAccount((001), "Prashant", 2000);
@@ -206,6 +208,10 @@ void main(){
   bank.generateReport();
 
   //Interest Calculation
-  print('\nInterest for Prashant (Savings): \$${savings.calculateInterest().toStringAsFixed(2)}');
-  print('Interest for Nishan (premium): \$${premium.calculateInterest().toStringAsFixed(2)}');
+  print(
+    '\nInterest for Prashant (Savings): \$${savings.calculateInterest().toStringAsFixed(2)}',
+  );
+  print(
+    'Interest for Nishan (premium): \$${premium.calculateInterest().toStringAsFixed(2)}',
+  );
 }
